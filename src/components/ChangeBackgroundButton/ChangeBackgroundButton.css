@@ -1,0 +1,24 @@
+
+.changeBackBtn {
+    width: 200px;
+    height: 15px;
+    background-color: #eee;
+    position: absolute;
+    border-radius: 12px 12px 0 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: .3s;
+    color: #eee;
+    cursor: pointer;
+    padding: 30px 0 0 0;
+    font-weight: 600;
+    text-align: center;
+    z-index: 10;
+}
+
+.changeBackBtn-hover {
+    height: 45px;
+    padding: 0;
+    color: black;
+}
