@@ -15,8 +15,7 @@
 }
 
 .musicPlayer {
-    margin: 0;
-    margin-bottom: 10px;
+    margin: 0 0 10px;
     color: var(--mainLightColor);
 }
 
@@ -77,7 +76,7 @@
     font-weight: 400;
 }
 
-.musicControler {
+.musicController {
     cursor: pointer;
     font-size: 28px;
     color: var(--mainColor);
@@ -89,4 +88,28 @@
 
 .objectFitContain {
     object-fit: contain;
+}
+
+.objectFitFill {
+
+    object-fit: fill;
+
+}
+
+.volumeControl {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.volumeIcon {
+    font-size: 20px;
+    color: var(--mainColor);
+    cursor: default;
+}
+
+.musicVolumeBar {
+    flex-grow: 1;
 }

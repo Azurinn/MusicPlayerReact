@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import './AudioPlayer.css';
 
-const AudioPlayer = ({ musicAPI, currentAudio }) => {
+const AudioPlayer = ({musicAPI, currentAudio}) => {
     const [currentMusicDetails, setCurrentMusicDetails] = useState(musicAPI[0]);
     const [audioProgress, setAudioProgress] = useState(0);
+    const [volumeState, setVolumeState] = useState(0)
     const [isAudioPlaying, setIsAudioPlaying] = useState(false);
     const [musicIndex, setMusicIndex] = useState(0);
     const [musicTotalLength, setMusicTotalLength] = useState('00:00');
     const [musicCurrentTime, setMusicCurrentTime] = useState('00:00');
+    const [currentFitClass, setCurrentFitClass] = useState('objectFitCover');
+
 
     useEffect(() => {
         const audio = currentAudio.current;
@@ -22,6 +25,12 @@ const AudioPlayer = ({ musicAPI, currentAudio }) => {
         }
     }, [currentMusicDetails]);
 
+    useEffect(() => {
+        if (currentAudio.current) {
+            currentAudio.current.volume = volumeState / 100;
+        }
+    }, [volumeState]);
+
     const updateCurrentMusicDetails = (index) => {
         const musicObject = musicAPI[index];
         currentAudio.current.src = musicObject.songSrc;
@@ -31,7 +40,7 @@ const AudioPlayer = ({ musicAPI, currentAudio }) => {
         currentAudio.current.addEventListener('canplay', () => {
             currentAudio.current.play();
             setIsAudioPlaying(true);
-        }, { once: true });
+        }, {once: true});
     };
 
     const handleNextSong = () => {
@@ -74,8 +83,20 @@ const AudioPlayer = ({ musicAPI, currentAudio }) => {
         setAudioProgress(progress);
     };
 
-    return (
-        <div className="music-container">
+    const handleVolumeChange = (e) => {
+        const volume = e.target.value;
+        currentAudio.current.volume = volume / 100;
+        setVolumeState(volume);
+    };
+
+
+    const handleChangeAvatar = () => {
+        const fitClasses = ['objectFitContain', 'objectFitCover', 'objectFitFill'];
+        const nextIndex = (fitClasses.indexOf(currentFitClass) + 1) % fitClasses.length;
+        setCurrentFitClass(fitClasses[nextIndex]);
+    };
+
+    return (<div className="music-container">
             <audio
                 ref={currentAudio}
                 src={currentMusicDetails.songSrc}
@@ -89,6 +110,8 @@ const AudioPlayer = ({ musicAPI, currentAudio }) => {
                 src={currentMusicDetails.songAvatar}
                 id="songAvatar"
                 alt={currentMusicDetails.songName}
+                className={currentFitClass}
+                onClick={handleChangeAvatar}
             />
             <div className="musicTimerDiv">
                 <p className="musicCurrentTime">{musicCurrentTime}</p>
@@ -101,16 +124,25 @@ const AudioPlayer = ({ musicAPI, currentAudio }) => {
                 onChange={handleProgressChange}
             />
             <div className="musicControlers">
-                <i className="fa-solid fa-backward musicControler" onClick={handlePrevSong}></i>
+                <i className="fa-solid fa-backward musicController" onClick={handlePrevSong}></i>
                 <i
                     className={`fa-solid ${isAudioPlaying ? 'fa-pause-circle' : 'fa-circle-play'} playBtn`}
                     onClick={handleAudioPlay}
                 ></i>
-                <i className="fa-solid fa-forward musicControler" onClick={handleNextSong}></i>
+                <i className="fa-solid fa-forward musicController" onClick={handleNextSong}></i>
             </div>
-
-        </div>
-    );
+            <div className="volumeControl">
+                <span className="volumeIcon">{Number(volumeState) === 0 ? "🔇" : " 🔊"}</span>
+                <input
+                    type="range"
+                    className="musicVolumeBar"
+                    min="0"
+                    max="100"
+                    value={volumeState}
+                    onChange={handleVolumeChange}
+                />
+            </div>
+        </div>);
 };
 
 export default AudioPlayer;
